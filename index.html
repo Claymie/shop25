@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>mopsik shop | FIXED 2 ROWS</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; color: #fff; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; }
+
+        body {
+            background: linear-gradient(-45deg, #000, #1a1a1a, #050505, #111);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            min-height: 100vh;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* КАСТОМНЫЙ КУРСОР */
+        .cursor-dot {
+            width: 8px; height: 8px; background: #fff; border-radius: 50%;
+            position: fixed; pointer-events: none; z-index: 10000;
+            mix-blend-mode: difference; transition: transform 0.1s;
+        }
+        .cursor-outline {
+            width: 30px; height: 30px; border: 1px solid rgba(255,255,255,0.3); border-radius: 50%;
+            position: fixed; pointer-events: none; z-index: 9999;
+            transition: transform 0.3s ease, left 0.1s, top 0.1s;
+        }
+
+        nav {
+            position: fixed; top: 0; width: 100%;
+            display: flex; justify-content: space-between;
+            padding: 20px 50px; background: rgba(0,0,0,0.95);
+            z-index: 1000; border-bottom: 1px solid #222;
+            align-items: center;
+        }
+        .logo { font-weight: bold; letter-spacing: 3px; text-transform: lowercase; font-size: 1.2rem; }
+        .nav-links a { color: #fff; text-decoration: none; margin-left: 20px; font-size: 0.7rem; opacity: 0.5; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; cursor: none; }
+        .nav-links a:hover { opacity: 1; }
+
+        section { min-height: 100vh; display: flex; align-items: center; position: relative; padding: 100px 0; }
+
+        .hero { flex-direction: column; justify-content: center; text-align: center; }
+        .hero-meta { font-size: 0.6rem; letter-spacing: 5px; color: #444; margin-bottom: 20px; text-transform: uppercase; }
+        .hero h1 { font-size: clamp(40px, 12vw, 150px); letter-spacing: -2px; font-weight: 100; text-transform: lowercase; margin: 10px 0; }
+
+        .services-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 20px; 
+            width: 90%; 
+            margin: -50px auto 100px; 
+            position: relative;
+            z-index: 10;
+        }
+        .service-card { 
+            background: rgba(10,10,10,0.6); 
+            border: 1px solid #1a1a1a; 
+            padding: 40px; 
+            backdrop-filter: blur(10px);
+            transition: 0.4s;
+        }
+        .service-card:hover { border-color: #fff; background: rgba(20,20,20,0.8); }
+        .service-card h3 { letter-spacing: 3px; margin-bottom: 15px; font-size: 0.9rem; border-left: 2px solid #fff; padding-left: 15px; text-transform: uppercase; }
+        .service-card p { color: #666; font-size: 0.85rem; line-height: 1.6; }
+
+        .catalog-section { flex-direction: column; justify-content: center; background: rgba(255,255,255,0.01); }
+        .catalog-wrapper { position: relative; width: 95%; max-width: 1600px; display: flex; align-items: center; margin: 0 auto; gap: 10px; }
+        
+        .catalog-container { 
+            width: 100%; 
+            height: 950px; 
+            overflow-x: hidden; 
+            display: flex; 
+            flex-direction: column;
+            flex-wrap: wrap; 
+            gap: 25px; 
+            padding: 40px 0; 
+            scroll-behavior: smooth; 
+        }
+
+        .nav-btn { 
+            background: rgba(255,255,255,0.03); border: 1px solid #222; color: #fff; 
+            width: 60px; height: 120px; cursor: none; transition: 0.3s; z-index: 50; 
+            user-select: none;
+        }
+        .nav-btn:hover { background: #fff; color: #000; }
+
+        .product-card { 
+            width: 350px; 
+            height: 420px; 
+            background: rgba(10,10,10,0.8); 
+            border: 1px solid #1a1a1a; 
+            padding: 25px; 
+            text-align: center; 
+            transition: 0.5s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .product-card:hover { border-color: #fff; transform: translateY(-5px); }
+        
+        .product-img { 
+            height: 250px; 
+            background: #000; 
+            margin-bottom: 15px; 
+            overflow: hidden; 
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #1a1a1a;
+        }
+        .product-img img { width: 100%; height: 100%; object-fit: contain; display: block; }
+
+        .brand-showcase { display: flex; width: 100%; align-items: center; justify-content: space-between; overflow: hidden; }
+        .brand-text { flex: 1; padding: 0 100px; }
+        .brand-text h2 { font-size: 5rem; margin-bottom: 30px; letter-spacing: -2px; font-weight: 100; text-transform: lowercase; }
+        .brand-text p { color: #666; line-height: 1.8; font-size: 1.1rem; max-width: 650px; }
+
+        .brand-image-box { flex: 1; height: 600px; overflow: hidden; }
+        .brand-image-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        .iphone-player {
+            width: 300px; height: 550px; background: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 35px;
+            display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            flex-shrink: 0;
+        }
+        .iphone-art { width: 100%; height: 60%; background: #000; }
+        .ipod-controls-block { padding: 20px; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #0a0a0a; }
+        .track-info { text-align: center; margin-bottom: 20px; }
+        .track-info h3 { font-size: 1.2rem; letter-spacing: 1px; margin-bottom: 5px; text-transform: lowercase; }
+        .track-info p { color: #555; font-size: 0.8rem; }
+        .ctrl-btns { display: flex; gap: 30px; font-size: 1.2rem; color: #fff; align-items: center; cursor: none; }
+
+        .order-container { display: flex; gap: 50px; width: 90%; max-width: 1200px; margin: 50px auto; flex-wrap: wrap; }
+        form { flex: 1; min-width: 300px; display: flex; flex-direction: column; gap: 15px; }
+        input, textarea { background: transparent; border: 1px solid #222; padding: 20px; color: #fff; outline: none; transition: 0.3s; font-family: inherit; cursor: none; }
+        .submit-btn { background: #fff; color: #000; border: none; padding: 20px; font-weight: bold; cursor: none; text-transform: uppercase; letter-spacing: 5px; }
+        
+        .map-box { flex: 1; min-width: 300px; height: 450px; border: 1px solid #222; }
+
+        /* ОБНОВЛЕННЫЙ FAQ В КВАДРАТИКАХ */
+        .faq-section { width: 90%; max-width: 1000px; margin: 0 auto 100px auto; padding-top: 50px; }
+        .faq-item { 
+            border: 1px solid #1a1a1a; 
+            margin-bottom: 15px; 
+            padding: 25px; 
+            background: rgba(10,10,10,0.4); 
+            transition: 0.3s;
+        }
+        .faq-item:hover { border-color: #444; }
+        .faq-item.active { border-color: #fff; background: rgba(20,20,20,0.6); }
+
+        .faq-question { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; letter-spacing: 3px; text-transform: uppercase; color: #fff; cursor: none; }
+        .faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; color: #666; font-size: 0.85rem; line-height: 1.8; }
+        .faq-item.active .faq-answer { max-height: 200px; margin-top: 20px; color: #fff; }
+        .faq-icon { font-size: 1.2rem; transition: 0.3s; color: #333; }
+        .faq-item.active .faq-icon { transform: rotate(45deg); color: #fff; }
+
+        footer { padding: 80px 50px; background: #000; border-top: 1px solid #111; display: grid; grid-template-columns: 1fr 1fr; gap: 100px; }
+        footer h3 { letter-spacing: 3px; font-size: 0.7rem; margin-bottom: 25px; color: #444; text-transform: uppercase; }
+        footer p { color: #333; font-size: 0.8rem; line-height: 2; }
+
+        @media (max-width: 900px) {
+            .order-container, footer { grid-template-columns: 1fr; flex-direction: column; }
+            .brand-text h2 { font-size: 3rem; }
+            .brand-showcase { flex-direction: column !important; text-align: center; }
+            .brand-text { padding: 50px 20px; }
+            .inner-yohji { flex-direction: column; padding: 0 !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor-dot"></div>
+    <div class="cursor-outline"></div>
+
+    <nav>
+    <div class="logo">mopsik shop</div>
+    <div class="nav-links">
+        <a href="index.html">Главная</a>
+        <a href="catalog.html">Каталог</a> 
+        <a href="#brands">Архив</a>
+        <a href="#order">Заказать</a>
+    </div>
+</nav>
+
+    <section id="hero" class="hero">
+        <div class="hero-meta">Russia / Tokyo / Stockholm — 2026</div>
+        <h1>mopsik shop</h1>
+    </section>
+
+    <div class="services-grid">
+        <div class="service-card"><h3>РИТЕЙЛ</h3><p>Продажа оригинальных архивных вещей Rick Owens, Yohji Yamamoto и других брендов с гарантией подлинности.</p></div>
+        <div class="service-card"><h3>БАЙИНГ</h3><p>Поиск и доставка редких позиций под ваш запрос из Европы, Японии и США. Найдем то, чего нет в наличии.</p></div>
+        <div class="service-card"><h3>КОМИССИЯ</h3><p>Принимаем ваши вещи на реализацию. Проводим аутентификацию, делаем проф. съемку и находим покупателя.</p></div>
+    </div>
+
+    <section id="catalog" class="catalog-section">
+        <h2 style="margin-bottom: 20px; letter-spacing: 15px; font-weight: 100; font-size: 0.8rem; color: #444; text-align: center;">DOUBLE ROW ARCHIVE</h2>
+        <div class="catalog-wrapper">
+            <button class="nav-btn" id="prevBtn">←</button>
+            <div class="catalog-container" id="slider"></div>
+            <button class="nav-btn" id="nextBtn">→</button>
+        </div>
+    </section>
+
+    <div id="brands">
+        <section>
+            <div class="brand-showcase">
+                <div class="brand-image-box"><img src="https://i.ytimg.com/vi/4MmpQQytwyw/maxresdefault.jpg" alt="Rick Owens"></div>
+                <div class="brand-text">
+                    <h2>rick owens</h2>
+                    <p>Рик Оуэнс — это идеолог мрачного гламура и деконструктивизма. Его стиль часто называют «глем-гранжем».</p>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="brand-showcase" style="flex-direction: row-reverse;">
+                <div class="brand-image-box"><img src="https://media.gettyimages.com/id/982721246/photo/runway-paris-fashion-week-menswear-spring-summer-2019.jpg?s=1024x1024&w=gi&k=20&c=aoPMtRpqtd08TlOSp0i7vpK9cBEozJj-ibaQqmE77Ys=" alt="Yohji Yamamoto"></div>
+                <div class="inner-yohji" style="display: flex; align-items: center; justify-content: space-between; flex: 1; padding: 0 100px; gap: 50px;">
+                    <div class="iphone-player">
+                        <div class="iphone-art"><img src="https://avatars.yandex.net/get-music-content/16406615/b7b050ec.a.38265990-1/m1000x1000" style="width: 100%; height: 100%; object-fit: cover;"></div>
+                        <div class="ipod-controls-block">
+                            <div class="track-info"><h3>tewiq</h3><p>письмо</p></div>
+                            <div class="ctrl-btns"><span>←</span><span style="font-size: 1.5rem;">▶</span><span>→</span></div>
+                        </div>
+                    </div>
+                    <div class="brand-text" style="text-align: right; padding: 0;"> 
+                        <h2>yohji yamamoto</h2>
+                        <p>Йоджи Ямамото — японский мастер, воспевающий несовершенство кроя и глубину черного цвета.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section>
+            <div class="brand-showcase">
+                <div class="brand-image-box"><img src="https://i.pinimg.com/736x/6a/24/cc/6a24cccc1fa998625a72e0b2381f9720.jpg" alt="Chrome Hearts"></div>
+                <div class="brand-text">
+                    <h2>chrome hearts</h2>
+                    <p>Chrome Hearts — символ брутальной роскоши из Лос-Анджелеса. Бескомпромиссное качество серебра и кожи.</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <section id="order" style="flex-direction: column; justify-content: center; align-items: center; min-height: 80vh;">
+        <h2 style="letter-spacing: 10px; font-weight: 100; font-size: 1rem; color: #444; margin-bottom: 50px;">CONTACT & LOCATION</h2>
+        <div class="order-container">
+            <form id="orderForm">
+                <input type="text" name="u_name" placeholder="ВАШЕ ИМЯ" required>
+                <input type="text" name="u_contact" placeholder="TELEGRAM / НОМЕР" required>
+                <textarea name="u_text" placeholder="ВАШ ЗАПРОС" required style="background: transparent; border: 1px solid #222; padding: 20px; color: #fff; outline: none; min-height: 100px; font-family: inherit;"></textarea>
+                <button type="submit" class="submit-btn" id="submitBtn">ОТПРАВИТЬ</button>
+            </form>
+            <div class="map-box">
+                <iframe width="100%" height="100%" frameborder="0" src="https://www.openstreetmap.org/export/embed.html?bbox=107.58,51.82,107.61,51.84&layer=mapnik"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="faq-section">
+        <h2 style="letter-spacing: 15px; font-weight: 100; font-size: 0.8rem; color: #222; margin-bottom: 40px; text-align: center;">F.A.Q.</h2>
+        
+        <div class="faq-item">
+            <div class="faq-question"><span>ОРИГИНАЛЬНОСТЬ</span> <span class="faq-icon">+</span></div>
+            <div class="faq-answer">Все товары проходят процедуру аутентификации. Мы работаем только с оригинальными архивными позициями и не допускаем подделок.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question"><span>ДОСТАВКА И СРОКИ</span> <span class="faq-icon">+</span></div>
+            <div class="faq-answer">Доставка осуществляется Почтой России или СДЭК. Сроки зависят от региона, в среднем 3-7 дней с момента заказа.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question"><span>КОМИССИОННАЯ ПРОДАЖА</span> <span class="faq-icon">+</span></div>
+            <div class="faq-answer">Мы принимаем вещи на реализацию. Напишите нам через форму заказа, прикрепив ссылку на вещь или её описание.</div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-item"><h3>MANIFESTO</h3><p>mopsik shop — селективный архив авангардной моды в Russia.</p></div>
+        <div class="footer-item"><h3>CONTACT</h3><p>Admin: @archive_admin<br>Based in Russia.<br>2026 mopsik store.</p></div>
+    </footer>
+
+    <script>
+        const items = [
+            { b: 'Rick Owens', n: 'Geobasket leather', p: '120 000 ₽', url: 'https://i.pinimg.com/736x/45/3a/78/453a7870247261baef95bf71f70cf128.jpg' }, 
+            { b: 'Rick Owens', n: 'Ramones high', p: '95 000 ₽', url: 'https://i.pinimg.com/736x/6c/05/52/6c0552bdde36ca83c2a6a20ff4785975.jpg' },
+            { b: 'Yohji Yamamoto', n: 'Deconstructed coat', p: '145 000 ₽', url: 'https://avatars.mds.yandex.net/i?id=d90174ebd07b4ca3f45eb7464f9e0e0e4eaa21c4-16453054-images-thumbs&n=13' },
+            { b: 'Chrome Hearts', n: 'Silver Ring Forever', p: '48 000 ₽', url: 'https://static.cdn.oskelly.ru/product/4461758/item-a3d4af7d-f752-4725-9072-a884542ea8bd.jpg' },
+            { b: 'Chrome Hearts', n: 'Dagger Pendant', p: '35 000 ₽', url: 'https://i.ebayimg.com/images/g/CyAAAeSwPVZosmDh/s-l1600.jpg' },
+            { b: 'Balenciaga', n: 'Defender Grey', p: '90 000 ₽', url: 'https://media-assets.grailed.com/prd/listing/temp/be75682f5f894f44a0bf46457477bc9b?' },
+            { b: 'Rick Owens', n: 'Mastodon Cargo', p: '85 000 ₽', url: 'https://avatars.mds.yandex.net/get-mpic/12641020/2a000001944a967ccecc2b80a327a20cacc9/orig' },
+            { b: 'Chrome Hearts', n: 'Cross Hoodie', p: '110 000 ₽', url: 'https://n.cdn.cdek.shopping/images/shopping/BsCDmZQQvfrBIjEg.jpg?v=1' },
+            { b: 'Yohji Yamamoto', n: 'Wide Pants', p: '60 000 ₽', url: 'https://avatars.mds.yandex.net/get-mpic/15142316/2a0000019633b964940afea7ee2eaae49cb3/orig' },
+            { b: 'Rick Owens', n: 'Bozo Tractor Boots', p: '130 000 ₽', url: 'https://avatars.mds.yandex.net/i?id=db648eeba371b681cbe11d4c6b085a7bbcfbb70c-5359302-images-thumbs&n=13' }
+        ];
+
+        const slider = document.getElementById('slider');
+        items.forEach(item => {
+            slider.innerHTML += `
+                <div class="product-card">
+                    <div class="product-img"><img src="${item.url}" alt="${item.b}"></div>
+                    <div>
+                        <span style="font-weight:bold; letter-spacing:2px; text-transform:uppercase; font-size: 0.7rem;">${item.b}</span><br>
+                        <span style="color:#444; font-size:12px; display:block; margin: 5px 0 10px 0;">${item.n}</span>
+                        <b style="font-size: 1.1rem; letter-spacing: -1px;">${item.p}</b>
+                    </div>
+                </div>
+            `;
+        });
+
+        document.getElementById('prevBtn').addEventListener('click', () => slider.scrollLeft -= 370);
+        document.getElementById('nextBtn').addEventListener('click', () => slider.scrollLeft += 370);
+
+        const dot = document.querySelector('.cursor-dot');
+        const outline = document.querySelector('.cursor-outline');
+        document.addEventListener('mousemove', (e) => {
+            dot.style.left = e.clientX + 'px';
+            dot.style.top = e.clientY + 'px';
+            outline.style.left = e.clientX - 11 + 'px';
+            outline.style.top = e.clientY - 11 + 'px';
+        });
+
+        document.querySelectorAll('.faq-question').forEach(q => {
+            q.addEventListener('click', () => {
+                q.parentElement.classList.toggle('active');
+            });
+        });
+
+        const scriptURL = 'https://script.google.com/macros/s/AKfycbxWTFPhk4yObG-aLIWSMdbRofLSC7k9rbMnv-FMWPkQVKDylKBVbiExhU-uqyWqielD2A/exec';
+        const form = document.getElementById('orderForm');
+        const btn = document.getElementById('submitBtn');
+
+        form.addEventListener('submit', e => {
+            e.preventDefault();
+            btn.innerText = 'ОТПРАВКА...';
+            btn.disabled = true;
+
+            fetch(scriptURL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify({
+                    name: form.u_name.value,
+                    contact: form.u_contact.value,
+                    text: form.u_text.value
+                })
+            }).then(() => {
+                btn.innerText = 'ОТПРАВЛЕНО';
+                form.reset();
+                setTimeout(() => { btn.innerText = 'ОТПРАВИТЬ'; btn.disabled = false; }, 3000);
+            }).catch(() => {
+                btn.innerText = 'ОШИБКА';
+                btn.disabled = false;
+            });
+        });
+    </script>
+</body>
+</html>
